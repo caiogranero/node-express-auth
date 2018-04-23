@@ -1,1 +1,1 @@
-# node-express-auth
+# node-express-api-template
