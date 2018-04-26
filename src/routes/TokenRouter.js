@@ -15,16 +15,26 @@ module.exports = (app) => {
     });
   });
 
-  app.get(`${baseUrl}/hassession`, (req, res) => {
-    const currentToken = req.body.token || req.query.token || req.headers['x-access-token'];
-    const tokenPromise = tokenController.ValidateToken(currentToken);
+  app.post(`${baseUrl}/verify`, (req, res) => {
+    const currentToken = req.headers['x-access-token'];
+    const tokenPromise = tokenController.Verify(currentToken);
 
     tokenPromise.then((response) => {
-      res.status(HttpStatusCode.Success.get()).send({ data: response });
+      res.status(HttpStatusCode.Success.get()).send({ response });
+    }, (error) => {
+      res.status(HttpStatusCode.InternalServerError.get()).send({ error });
+    });
+  });
+
+  app.post(`${baseUrl}/decode`, (req, res) => {
+    const currentToken = req.headers['x-access-token'];
+    const tokenPromise = tokenController.Decode(currentToken);
+
+    tokenPromise.then((response) => {
+      res.status(HttpStatusCode.Success.get()).send({ response });
     }, (error) => {
       res.status(HttpStatusCode.InternalServerError.get()).send({
-        data: false,
-        error: error.message,
+        error,
       });
     });
   });

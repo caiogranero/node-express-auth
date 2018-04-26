@@ -9,6 +9,7 @@ class TokenController {
   GetToken(request) {
     return User.findOne({
       name: request.name,
+      password: request.password,
     }).then((user) => {
       const payload = { name: user.name, id: user.id };
 
@@ -20,12 +21,21 @@ class TokenController {
     }).catch(error => Promise.reject(error));
   }
 
-  ValidateToken(token) {
+  Verify(token) {
     return jwt.verify(token, this.tokenKey, (err) => {
+      if (err) {
+        return Promise.reject(Object.assign({ hasSession: false }, err));
+      }
+      return Promise.resolve({ hasSession: true });
+    });
+  }
+
+  Decode(token) {
+    return jwt.verify(token, this.tokenKey, (err, decoded) => {
       if (err) {
         return Promise.reject(err);
       }
-      return Promise.resolve(true);
+      return Promise.resolve(decoded);
     });
   }
 }
