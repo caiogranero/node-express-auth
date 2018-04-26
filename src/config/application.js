@@ -18,14 +18,26 @@ app.set('superSecret', config.application.secret);
 app.use(cookieParser());
 app.use(helmet());
 app.use(cors());
-app.use(morgan('dev'));
+
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('dev'));
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
 
+let routes = './routes';
+
+// to consign, routes path change when run the test from main folder.
+// This happens just in test enviroment
+if (process.env.NODE_ENV === 'test') {
+  routes = './src/routes';
+}
+
 consign()
-  .include('./routes')
+  .include(routes)
   .into(app);
 
 module.exports = app;

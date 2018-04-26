@@ -19,7 +19,9 @@ const printRoutes = () => {
   });
 };
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   Console.log(`Server listen on port ${port}`);
   printRoutes();
 });
+
+module.exports = server;
