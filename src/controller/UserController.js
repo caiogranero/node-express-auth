@@ -5,8 +5,8 @@ class UserController {
     this.userFactory = UserFactory;
   }
 
-  CreateUser(request) {
-    const user = this.userFactory.Create(request.name, request.password);
+  CreateUser({ name, password }) {
+    const user = this.userFactory.Create(name, password);
 
     return user.save()
       .then(document => Promise.resolve(document))

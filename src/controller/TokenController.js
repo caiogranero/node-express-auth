@@ -6,10 +6,10 @@ class TokenController {
     this.tokenKey = tokenKey;
   }
 
-  GetToken(request) {
+  GetToken({ name, password }) {
     return User.findOne({
-      name: request.name,
-      password: request.password,
+      name,
+      password,
     }).then((user) => {
       const payload = { name: user.name, id: user.id };
 
